@@ -3,13 +3,14 @@ import studentSchema from '../models/student-model';
 import { sendResponse } from '../utils/responce-format';
 import { MESSAGE_CODE } from '../utils/message-code';
 import { sendEmail } from '../utils/mail-send';
+import verificationCodeGmailLogin from '../models/verification-code-gmail-login';
+
 
 
 // Function to create a new student
 const createStudent = async (req: Request, res: Response) => {
-
-  // creation du code de verification
   const generateCode = (): string => Math.floor(100000 + Math.random() * 900000).toString();
+
   const {
     name,
     secondName,
@@ -20,7 +21,7 @@ const createStudent = async (req: Request, res: Response) => {
     interests,
     cv,
     profilePhoto,
-    code: userCode 
+    code: userCode
   } = req.body;
 
   if (!name || !secondName || !email || !phone || !status || !educationLevel || !interests) {
@@ -43,43 +44,51 @@ const createStudent = async (req: Request, res: Response) => {
       });
     }
 
-    //si aucun code n'est fourni, envoyer le code par mail
+    // Étape 1 : Génération et envoi du code si non fourni
     if (!userCode) {
       const code = generateCode();
-      try {
-        await sendEmail({
-          expéditeurINFO: 'chemindelareussite une nouvelle methode educatif',
-          destinataire: email,
-          subject: 'Code de vérification \n de la creation de votre compte',
-          text: `Votre code de vérification est : ${code}`,
-        });
-        
-        return sendResponse({
-          res,
-          success: true,
-          status: 200,
-          message: 'Code de vérification envoyé par email.',
-          data: { code },
-        });
-      } catch (error) {
-        console.error('Erreur or de Envoie:', (error as Error).message);
-      }
-      
-    }
-      
 
-    //Vérification du code
-    const expectedCode = req.body.expectedCode;
-    if (userCode !== expectedCode) {
+      // Supprimer les anciens codes de ce mail
+      await verificationCodeGmailLogin.deleteMany({ email });
+
+      // Enregistrement du code temporaire
+      await verificationCodeGmailLogin.create({ email, code });
+
+      // Envoi du mail
+      await sendEmail({
+        destinataire: email,
+        subject: 'Code de vérification \n de la creation de votre compte',
+        text: `Votre code de vérification est : ${code}`,
+        code: code
+      });
+
+      return sendResponse({
+        res,
+        success: true,
+        status: 200,
+        message: 'Code de vérification envoyé par email.',
+        data:{
+          code
+        }
+      });
+    }
+
+    // Étape 2 : Vérification du code
+    const entry = await verificationCodeGmailLogin.findOne({ email });
+
+    if (!entry || entry.code !== userCode) {
       return sendResponse({
         res,
         success: false,
         status: 401,
-        message: 'Code de vérification incorrect',
+        message: 'Code de vérification incorrect ou expiré.',
       });
     }
 
-    //Création du compte si tout est valide
+    // Supprimer le code une fois validé
+    await verificationCodeGmailLogin.deleteOne({ email });
+
+    // Étape 3 : Création du compte
     const newStudent = new studentSchema({
       name,
       secondName,
