@@ -16,6 +16,7 @@ const createStudent = async (req: Request, res: Response) => {
     secondName,
     email,
     phone,
+    pwd,
     status,
     educationLevel,
     interests,
@@ -24,14 +25,6 @@ const createStudent = async (req: Request, res: Response) => {
     code: userCode
   } = req.body;
 
-  if (!name || !secondName || !email || !phone || !status || !educationLevel || !interests) {
-    return sendResponse({
-      res,
-      success: false,
-      status: 422,
-      message: MESSAGE_CODE.CHAMP_EMPTY,
-    });
-  }
 
   try {
     const existingStudent = await studentSchema.findOne({ email });
@@ -67,7 +60,7 @@ const createStudent = async (req: Request, res: Response) => {
         success: true,
         status: 200,
         message: 'Code de vérification envoyé par email.',
-        data:{
+        data: {
           code
         }
       });
@@ -85,6 +78,16 @@ const createStudent = async (req: Request, res: Response) => {
       });
     }
 
+    //verified que tout les champs sont rempli
+    if (!name || !secondName || !email || !phone || !pwd || !status || !educationLevel || !interests) {
+      return sendResponse({
+        res,
+        success: false,
+        status: 422,
+        message: MESSAGE_CODE.CHAMP_EMPTY,
+      });
+    }
+
     // Supprimer le code une fois validé
     await verificationCodeGmailLogin.deleteOne({ email });
 
@@ -94,6 +97,7 @@ const createStudent = async (req: Request, res: Response) => {
       secondName,
       email,
       phone,
+      pwd,
       status,
       educationLevel,
       interests,

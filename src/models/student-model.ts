@@ -22,6 +22,10 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    pwd: {
+        type: String,
+        required: true
+    },
     status: {
         type: String,
         enum: ['Élève', 'Étudiant', 'Demandeur d\'emploi', 'Autre'],
@@ -53,3 +57,4 @@ const studentSchema = new mongoose.Schema({
 
 export default mongoose.model('Student', studentSchema);
 
+ 

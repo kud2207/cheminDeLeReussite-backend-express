@@ -5,27 +5,29 @@ import {
   getStudentById,
   updateStudent,
   deleteStudent
-} from '../controllers/student-controller';
+} from '../controllers/student-crud-controller';
+import { IsVerifiedToken, loginStudent } from '../controllers/student-auth-controller';
+import { verifyToken } from '../middlewares/auth-token-middleware';
 
 const studentRoutes = express.Router();
 
-// (API Base): http://localhost:3000/student
+// (API Base): http://localhost:3001/student
 
-//Create a new student
-studentRoutes.post('/create', createStudent);
+studentRoutes.post('/login', loginStudent); //Login student
 
-//Get all students
-studentRoutes.get('/', getAllStudents);
+studentRoutes.post('/create', createStudent); //Create a new student
 
-//Get a student by ID
-studentRoutes.get('/:id', getStudentById);
+studentRoutes.get('/', getAllStudents); //Get all students
 
-//Update a student by ID
-studentRoutes.put('/update/:id', updateStudent);
+studentRoutes.get('/:id', getStudentById); //Get a student by ID
 
-//Delete a student by ID
-studentRoutes.delete('/delete/:id', deleteStudent);
+studentRoutes.put('/update/:id', updateStudent); //Update a student by ID
+
+studentRoutes.delete('/delete/:id', deleteStudent); //Delete a student by ID
+
+studentRoutes.post('/monprofil', verifyToken, IsVerifiedToken); //verification token student
 
 export {
   studentRoutes
 };
+
