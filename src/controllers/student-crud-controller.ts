@@ -19,9 +19,6 @@ const createStudent = async (req: Request, res: Response) => {
     pwd,
     status,
     educationLevel,
-    interests,
-    cv,
-    profilePhoto,
     code: userCode
   } = req.body;
 
@@ -79,7 +76,7 @@ const createStudent = async (req: Request, res: Response) => {
     }
 
     //verified que tout les champs sont rempli
-    if (!name || !secondName || !email || !phone || !pwd || !status || !educationLevel || !interests) {
+    if (!name || !secondName || !email || !phone || !pwd || !status || !educationLevel ) {
       return sendResponse({
         res,
         success: false,
@@ -100,9 +97,7 @@ const createStudent = async (req: Request, res: Response) => {
       pwd,
       status,
       educationLevel,
-      interests,
-      cv,
-      profilePhoto,
+
     });
 
     const savedStudent = await newStudent.save();
@@ -142,9 +137,9 @@ const getAllStudents = async (req: Request, res: Response) => {
     sendResponse({
       res,
       success: false,
-      status: 500,
+      status: 500, 
       message: MESSAGE_CODE.STUDENT_FETCH_ERROR,
-    });
+    }); 
   }
 };
 

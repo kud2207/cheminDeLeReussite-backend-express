@@ -10,5 +10,14 @@ export const MESSAGE_CODE = {
   STUDENT_UPDATE_ERROR: "Erreur lors de la mise à jour de l'étudiant.",
   STUDENT_DELETE_SUCCESS: "Étudiant supprimé avec succès.",
   STUDENT_DELETE_ERROR: "Erreur lors de la suppression de l'étudiant.",
+  POSTSTAGE_CREATE_SUCCESS: 'Offre de stage créée avec succès.',
+  POSTSTAGE_CREATE_ERROR: 'Erreur lors de la création de l\'offre.',
+  POSTSTAGE_FETCH_SUCCESS: 'Offres de stage récupérées avec succès.',
+  POSTSTAGE_FETCH_ERROR: 'Erreur lors de la récupération des offres.',
+  POSTSTAGE_NOT_FOUND: 'Offre de stage non trouvée.',
+  POSTSTAGE_UPDATE_SUCCESS: 'Offre mise à jour avec succès.',
+  POSTSTAGE_UPDATE_ERROR: 'Erreur lors de la mise à jour de l\'offre.',
+  POSTSTAGE_DELETE_SUCCESS: 'Offre supprimée avec succès.',
+  POSTSTAGE_DELETE_ERROR: 'Erreur lors de la suppression de l\'offre.',
 };
  

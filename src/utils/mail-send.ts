@@ -7,6 +7,7 @@ export interface EmailParams {
   subject: string;
   text?: string;
   code?: string; 
+  html?: string; // Optional HTML content
 }
 
 export const sendEmail = async (params: EmailParams): Promise<void> => {
@@ -38,7 +39,7 @@ export const sendEmail = async (params: EmailParams): Promise<void> => {
       to: params.destinataire,
       subject: params.subject,
       text: params.text || `Votre code est : ${params.code}`,
-      html: htmlContent
+      html: params.html || htmlContent
     });
 
     console.log('Message sent: %s', info.messageId);
