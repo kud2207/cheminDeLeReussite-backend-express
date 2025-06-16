@@ -21,7 +21,7 @@ studentRoutes.get('/', getAllStudents); //Get all students
 
 studentRoutes.get('/:id', getStudentById); //Get a student by ID
 
-studentRoutes.put('/update/:id', updateStudent); //Update a student by ID
+studentRoutes.put('/update/:id', updateStudent); //Update a student by ID 
 
 studentRoutes.delete('/delete/:id', deleteStudent); //Delete a student by ID
 
@@ -31,3 +31,4 @@ export {
   studentRoutes
 };
 
+    
